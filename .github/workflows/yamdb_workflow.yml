@@ -48,6 +48,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
+          set -x
           if [ -d yamdb_final ]; then
             cd yamdb_final
             docker-compose down
@@ -57,8 +58,12 @@ jobs:
           fi
           git clone git@github.com:hrapovd1/yamdb_final.git
           cd yamdb-final
+          pwd
           git checkout dev
           cd infra
+          pwd
+          ls
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASS }} >> .env
           docker-compose down
           docker system prune -f
           docker-compose up -d
