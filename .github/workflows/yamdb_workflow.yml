@@ -38,7 +38,7 @@ jobs:
     - name: Build and upload docker image
       run: |
         cd api_yamdb
-        docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+        echo ${{ secrets.DOCKER_PASS }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
         docker build . -t hrapovd/api_yamdb:1.0
         docker push hrapovd/api_yamdb:1.0
     - name: Deploy
