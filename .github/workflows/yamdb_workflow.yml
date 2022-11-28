@@ -28,7 +28,7 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip
         pip3 install flake8 pep8-naming flake8-broken-line flake8-return flake8-isort
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f api_yamdb/requirements.txt ]; then pip install -r api_yamdb/requirements.txt; fi
     - name: Lint with flake8
       run: |
         python3 -m flake8
