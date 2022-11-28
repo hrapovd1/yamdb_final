@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    build: ../api_yamdb
+    image: hrapovd/api_yamdb:1.0
     depends_on:
       - db
     restart: always
