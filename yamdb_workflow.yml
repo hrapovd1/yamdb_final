@@ -28,7 +28,7 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip
         pip3 install flake8 pep8-naming flake8-broken-line flake8-return flake8-isort
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f api_yamdb/requirements.txt ]; then pip install -r api_yamdb/requirements.txt; fi
     - name: Lint with flake8
       run: |
         python3 -m flake8
@@ -38,7 +38,7 @@ jobs:
     - name: Build and upload docker image
       run: |
         cd api_yamdb
-        docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+        echo ${{ secrets.DOCKER_PASS }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
         docker build . -t hrapovd/api_yamdb:1.0
         docker push hrapovd/api_yamdb:1.0
     - name: Deploy
@@ -48,22 +48,26 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          #echo ${{ secrets.SSH_KEY }} > ~/.ssh/id_rsa
-          #chmod 600 ~/.ssh/id_rsa
-          #if [ -d yamdb_final ]; then
-          #  cd yamdb_final
-          #  docker-compose down
-          #  docker system prune -f
-          #  cd ~
-          #  rm -rf ~/yamdb_final
-          #fi
-          #git clone git@github.com:hrapovd1/yamdb_final.git
-          #cd yamdb-final
-          #git checkout dev
+          set -x
+          if [ -d yamdb_final ]; then
+            cd yamdb_final/infra
+            sudo docker-compose down
+            sudo docker rmi hrapovd/api_yamdb:1.0
+            sudo docker system prune -f
+            sudo docker volume rm infra_static_value
+            cd ~
+            rm -rf ~/yamdb_final
+          fi
+          git clone git@github.com:hrapovd1/yamdb_final.git
+          cd yamdb_final
+          git checkout dev
           cd infra
-          docker-compose down
-          docker system prune -f
-          docker-compose up -d
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASS }} >> .env
+          sudo docker-compose up -d
+          sudo echo "#-------{ Setup app }-------------"
+          sudo docker-compose exec web python3 manage.py migrate
+          sudo docker-compose exec web python3 manage.py collectstatic --noinput
+          sudo docker-compose exec web python3 manage.py importcsv
     - name: Notify
       uses: appleboy/telegram-action@master
       with:

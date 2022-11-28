@@ -1,6 +1,6 @@
 # Проект YaMDb
 
-https://github.com/hrapovd1/yamdb_final/actions/workflows/yamdb_workflow/badge.svg?branch=dev
+ ![api_yamdb CI/CD](https://github.com/hrapovd1/yamdb_final/actions/workflows/yamdb_workflow/badge.svg?branch=dev)
 
 
 
