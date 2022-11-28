@@ -57,7 +57,7 @@ jobs:
             rm -rf ~/yamdb_final
           fi
           git clone git@github.com:hrapovd1/yamdb_final.git
-          cd yamdb-final
+          cd yamdb_final
           pwd
           git checkout dev
           cd infra
