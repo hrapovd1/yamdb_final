@@ -50,9 +50,9 @@ jobs:
         script: |
           set -x
           if [ -d yamdb_final ]; then
-            cd yamdb_final
-            docker-compose down
-            docker system prune -f
+            cd yamdb_final/infra
+            sudo docker-compose down
+            sudo docker system prune -f
             cd ~
             rm -rf ~/yamdb_final
           fi
@@ -64,9 +64,7 @@ jobs:
           pwd
           ls
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASS }} >> .env
-          docker-compose down
-          docker system prune -f
-          docker-compose up -d
+          sudo docker-compose up -d
     - name: Notify
       uses: appleboy/telegram-action@master
       with:
