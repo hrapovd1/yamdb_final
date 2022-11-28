@@ -48,7 +48,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          echo ${{ secrets.SSH_KEY }} > ~/.ssh/id_rsa
+          echo "${INPUT_KEY}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           if [ -d yamdb_final ]; then
             cd yamdb_final
