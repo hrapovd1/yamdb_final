@@ -58,13 +58,14 @@ jobs:
           fi
           git clone git@github.com:hrapovd1/yamdb_final.git
           cd yamdb_final
-          pwd
           git checkout dev
           cd infra
-          pwd
-          ls
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASS }} >> .env
           sudo docker-compose up -d
+          echo "#-------{ Setup app }-------------"
+          docker-compose exec web python3 manage.py migrate
+          docker-compose exec web python3 manage.py collectstatic --noinput
+          docker-compose exec web python3 manage.py importcsv
     - name: Notify
       uses: appleboy/telegram-action@master
       with:
