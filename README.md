@@ -1,6 +1,6 @@
 # Проект YaMDb
 
- [![CI/CD application](https://github.com/hrapovd1/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg?branch=master)](https://github.com/hrapovd1/yamdb_final/actions/workflows/yamdb_workflow.yml)
+ [![Python application](https://github.com/hrapovd1/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg?branch=master)](https://github.com/hrapovd1/yamdb_final/actions/workflows/yamdb_workflow.yml)
 
 
 
