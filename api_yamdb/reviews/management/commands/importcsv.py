@@ -2,10 +2,10 @@ import csv
 from os.path import join
 
 from django.core.management.base import BaseCommand
-
-from api_yamdb.settings import STATIC_ROOT
 from reviews.models import (Category, Comment, Genre, GenreTitle, Review,
                             Title, User)
+
+from api_yamdb.settings import STATIC_ROOT
 
 
 class Command(BaseCommand):

@@ -1,11 +1,10 @@
 import datetime as dt
 
+from api.validators import validate_username
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
-from api.validators import validate_username
 
 MAX_STR_LENGTH: int = 30
 

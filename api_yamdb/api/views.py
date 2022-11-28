@@ -1,3 +1,12 @@
+from api.filters import TitleFilter
+from api.permissions import (IsAdmin, IsAdminOrReadOnly,
+                             IsModeratorOrOwnerOrReadOnly)
+from api.serializers import (AuthTokenSerializer, CategorySerializer,
+                             CommentSerializer, GenreSerializer,
+                             RegisterSerializer, ReviewSerializer,
+                             TitleGetSerializer, TitleWriteSerializer,
+                             UserSerializer)
+from api.utils import get_random_string
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Avg
@@ -9,16 +18,6 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-
-from api.filters import TitleFilter
-from api.permissions import (IsAdmin, IsAdminOrReadOnly,
-                             IsModeratorOrOwnerOrReadOnly)
-from api.serializers import (AuthTokenSerializer, CategorySerializer,
-                             CommentSerializer, GenreSerializer,
-                             RegisterSerializer, ReviewSerializer,
-                             TitleGetSerializer, TitleWriteSerializer,
-                             UserSerializer)
-from api.utils import get_random_string
 from reviews.models import Category, Genre, Review, Title, User
 
 
@@ -61,23 +60,21 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action == 'patch':
             serializer = self.get_serializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            serializer = self.get_serializer(
-                user, data=request.data, partial=True
+        serializer = self.get_serializer(
+            user, data=request.data, partial=True
+        )
+        if serializer.is_valid():
+            if not user.is_admin and 'role' in serializer.validated_data:
+                serializer.validated_data.pop('role')
+            serializer.save(**serializer.validated_data)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK
             )
-            if serializer.is_valid():
-                if not user.is_admin and 'role' in serializer.validated_data:
-                    serializer.validated_data.pop('role')
-                serializer.save(**serializer.validated_data)
-                return Response(
-                    serializer.data,
-                    status=status.HTTP_200_OK
-                )
-            else:
-                return Response(
-                    serializer.errors,
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class AuthView(APIView):
@@ -129,11 +126,10 @@ class AuthView(APIView):
                     'Не корректные данные.',
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            elif user_exists and email_exists:
-                user = get_object_or_404(
-                    User,
-                    username=request.data['username'])
-                return self.send_email(user)
+            user = get_object_or_404(
+                User,
+                username=request.data['username'])
+            return self.send_email(user)
 
             user = User.objects.create(
                 username=serializer.validated_data['username'],
