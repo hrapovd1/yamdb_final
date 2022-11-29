@@ -54,7 +54,6 @@ jobs:
             sudo docker-compose down
             sudo docker rmi hrapovd/api_yamdb:1.0
             sudo docker system prune -f
-            sudo docker volume rm infra_static_value
             cd ~
             rm -rf ~/yamdb_final
           fi
@@ -64,10 +63,6 @@ jobs:
           cd infra
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASS }} >> .env
           sudo docker-compose up -d
-          sudo echo "#-------{ Setup app }-------------"
-          sudo docker-compose exec web python3 manage.py migrate
-          sudo docker-compose exec web python3 manage.py collectstatic --noinput
-          sudo docker-compose exec web python3 manage.py importcsv
     - name: Notify
       uses: appleboy/telegram-action@master
       with:
