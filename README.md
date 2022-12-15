@@ -3,7 +3,6 @@
  [![Python application](https://github.com/hrapovd1/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg?branch=master)](https://github.com/hrapovd1/yamdb_final/actions/workflows/yamdb_workflow.yml)
 
 
-**Документация по API приложения доступно по адресу [hrapovd.sytes.net](http://hrapovd.sytes.net/redoc/)**
 
 ### Описание
 Проект YaMDb собирает отзывы (`Review`) пользователей на произведения (`Titles`). Произведения  
